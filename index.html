@@ -1,111 +1,110 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我的电子商城</title>
+    <title>极简数码商城</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* 自动适配 Telegram 的深色/浅色主题 */
         :root {
-            --bg-color: var(--tg-theme-bg-color, #ffffff);
-            --text-color: var(--tg-theme-text-color, #222222);
-            --hint-color: var(--tg-theme-hint-color, #999999);
-            --link-color: var(--tg-theme-link-color, #248bcf);
-            --button-color: var(--tg-theme-button-color, #248bcf);
-            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --tg-theme-bg-color: #f4f7f9;
+            --main-color: #0088cc;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color);
             margin: 0;
-            padding: 16px;
-            -webkit-user-select: none;
+            padding: 15px;
+            color: #222;
         }
-
-        h2 { text-align: center; margin-bottom: 24px; }
-
-        .product-list { display: flex; flex-direction: column; gap: 16px; }
-
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: var(--main-color);
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
         .product-card {
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(127,127,127,0.05);
+            background: white;
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
         }
-
-        .product-info h3 { margin: 0 0 4px 0; font-size: 16px; }
-        .product-info p { margin: 0; color: var(--hint-color); font-size: 14px; }
-        .price { color: #31b545; font-weight: bold; margin-top: 8px; }
-
-        .add-btn {
-            background-color: var(--button-color);
-            color: var(--button-text);
+        .product-card:active {
+            transform: scale(0.95);
+        }
+        .product-img {
+            width: 100%;
+            height: 100px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+        .price {
+            color: #e91e63;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .buy-btn {
+            background: var(--main-color);
+            color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            width: 100%;
             font-weight: bold;
             cursor: pointer;
         }
-
-        .add-btn:active { opacity: 0.8; }
     </style>
 </head>
 <body>
-    <h2>移动数码商城</h2>
+    <div class="header">
+        <h1>🚀 极简数码商店</h1>
+        <p>Telegram 原生体验</p>
+    </div>
 
-    <div class="product-list">
-        <div class="product-card">
-            <div class="product-info">
-                <h3>极速充电宝 20000mAh</h3>
-                <p>支持 65W 快充</p>
-                <div class="price">¥ 129.00</div>
-            </div>
-            <button class="add-btn" onclick="selectProduct('极速充电宝', 129)">选择</button>
+    <div class="product-grid">
+        <div class="product-card" onclick="buyItem('新款耳机', 299)">
+            <img class="product-img" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="商品">
+            <div>新款耳机</div>
+            <div class="price">¥299</div>
+            <button class="buy-btn">加入购物车</button>
         </div>
-
-        <div class="product-card">
-            <div class="product-info">
-                <h3>真无线降噪耳机</h3>
-                <p>30小时超长续航</p>
-                <div class="price">¥ 299.00</div>
-            </div>
-            <button class="add-btn" onclick="selectProduct('降噪耳机', 299)">选择</button>
+        <div class="product-card" onclick="buyItem('智能手表', 899)">
+            <img class="product-img" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" alt="商品">
+            <div>智能手表</div>
+            <div class="price">¥899</div>
+            <button class="buy-btn">加入购物车</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        
-        // 初始化 WebApp
-        tg.ready();
-        tg.expand(); // 展开到全屏
+        tg.expand(); // 让小程序展开到全屏
 
-        function selectProduct(name, price) {
-            // 设置 Telegram 原生主按钮
-            tg.MainButton.setText(`购买 ${name} - ¥${price}`);
-            tg.MainButton.show();
+        function buyItem(name, price) {
+            // 1. 触发手机轻微震动反馈
+            tg.HapticFeedback.impactOccurred('medium');
             
-            // 按钮点击事件
-            tg.MainButton.onClick(() => {
-                tg.showConfirm(`您确定要下单购买 ${name} 吗？`, (ok) => {
-                    if (ok) {
-                        tg.showPopup({
-                            title: '下单成功',
-                            message: '订单已提交，请等待后台处理！',
-                            buttons: [{type: 'ok'}]
-                        });
-                        tg.MainButton.hide();
-                    }
-                });
+            // 2. 弹窗确认
+            tg.showConfirm(`您确定要购买 ${name} 吗？`, (ok) => {
+                if (ok) {
+                    tg.showAlert(`已下单！感谢支付 ${price} 元。`);
+                }
             });
         }
     </script>
 </body>
 </html>
-
