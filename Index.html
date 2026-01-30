@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的电子商城</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* 自动适配 Telegram 的深色/浅色主题 */
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --link-color: var(--tg-theme-link-color, #248bcf);
+            --button-color: var(--tg-theme-button-color, #248bcf);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+            -webkit-user-select: none;
+        }
+
+        h2 { text-align: center; margin-bottom: 24px; }
+
+        .product-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .product-card {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(127,127,127,0.05);
+        }
+
+        .product-info h3 { margin: 0 0 4px 0; font-size: 16px; }
+        .product-info p { margin: 0; color: var(--hint-color); font-size: 14px; }
+        .price { color: #31b545; font-weight: bold; margin-top: 8px; }
+
+        .add-btn {
+            background-color: var(--button-color);
+            color: var(--button-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-btn:active { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <h2>移动数码商城</h2>
+
+    <div class="product-list">
+        <div class="product-card">
+            <div class="product-info">
+                <h3>极速充电宝 20000mAh</h3>
+                <p>支持 65W 快充</p>
+                <div class="price">¥ 129.00</div>
+            </div>
+            <button class="add-btn" onclick="selectProduct('极速充电宝', 129)">选择</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-info">
+                <h3>真无线降噪耳机</h3>
+                <p>30小时超长续航</p>
+                <div class="price">¥ 299.00</div>
+            </div>
+            <button class="add-btn" onclick="selectProduct('降噪耳机', 299)">选择</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        
+        // 初始化 WebApp
+        tg.ready();
+        tg.expand(); // 展开到全屏
+
+        function selectProduct(name, price) {
+            // 设置 Telegram 原生主按钮
+            tg.MainButton.setText(`购买 ${name} - ¥${price}`);
+            tg.MainButton.show();
+            
+            // 按钮点击事件
+            tg.MainButton.onClick(() => {
+                tg.showConfirm(`您确定要下单购买 ${name} 吗？`, (ok) => {
+                    if (ok) {
+                        tg.showPopup({
+                            title: '下单成功',
+                            message: '订单已提交，请等待后台处理！',
+                            buttons: [{type: 'ok'}]
+                        });
+                        tg.MainButton.hide();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
