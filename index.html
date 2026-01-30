@@ -3,108 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>极简数码商城</title>
+    <title>极客数码商城</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --tg-theme-bg-color: #f4f7f9;
-            --main-color: #0088cc;
+            --tg-theme-bg-color: #f0f2f5;
+            --tg-theme-button-color: #248bcf;
+            --tg-theme-button-text-color: #ffffff;
+            --accent-color: #ff9500;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background-color: var(--tg-theme-bg-color);
-            margin: 0;
-            padding: 15px;
-            color: #222;
+            margin: 0; padding: 0; padding-bottom: 80px;
+            user-select: none;
         }
-        .header {
-            text-align: center;
-            padding: 20px 0;
+        /* 顶部横幅 */
+        .banner {
+            background: linear-gradient(135deg, #248bcf, #00c6ff);
+            color: white; padding: 25px 20px; text-align: left;
         }
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-            color: var(--main-color);
+        /* 分类栏 */
+        .categories {
+            display: flex; gap: 10px; padding: 15px; overflow-x: auto;
+            white-space: nowrap; sticky: top; background: var(--tg-theme-bg-color);
         }
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
+        .cat-item {
+            background: white; padding: 8px 15px; border-radius: 15px;
+            font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .product-card {
-            background: white;
-            border-radius: 15px;
-            padding: 12px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+        /* 商品网格 */
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
+        .card {
+            background: white; border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        .product-card:active {
-            transform: scale(0.95);
+        .card img { width: 100%; height: 120px; object-fit: cover; background: #eee; }
+        .card-info { padding: 10px; flex-grow: 1; }
+        .card-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+        .card-price { color: var(--accent-color); font-size: 16px; font-weight: bold; }
+        /* 购买按钮 */
+        .add-btn {
+            background: var(--tg-theme-button-color); color: white;
+            border: none; border-radius: 8px; padding: 8px; width: 100%;
+            margin-top: 8px; font-weight: bold; cursor: pointer;
         }
-        .product-img {
-            width: 100%;
-            height: 100px;
-            background: #eee;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            object-fit: cover;
+        /* 底部结算栏 */
+        .footer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0;
         }
-        .price {
-            color: #e91e63;
-            font-weight: bold;
-            font-size: 18px;
-            margin: 5px 0;
-        }
-        .buy-btn {
-            background: var(--main-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            width: 100%;
-            font-weight: bold;
-            cursor: pointer;
+        .total-price { font-size: 20px; font-weight: bold; color: #333; }
+        .checkout-btn {
+            background: #31b545; color: white; border: none;
+            padding: 10px 25px; border-radius: 12px; font-size: 16px; font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🚀 极简数码商店</h1>
-        <p>Telegram 原生体验</p>
+    <div class="banner">
+        <h2 style="margin:0">Hi, 极客! 👋</h2>
+        <p style="margin:5px 0 0; opacity:0.8">发现今日最强数码单品</p>
     </div>
 
-    <div class="product-grid">
-        <div class="product-card" onclick="buyItem('新款耳机', 299)">
-            <img class="product-img" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="商品">
-            <div>新款耳机</div>
-            <div class="price">¥299</div>
-            <button class="buy-btn">加入购物车</button>
+    <div class="categories">
+        <div class="cat-item">🔥 热门</div>
+        <div class="cat-item">💻 电脑</div>
+        <div class="cat-item">🎧 耳机</div>
+        <div class="cat-item">📱 手机</div>
+    </div>
+
+    <div class="container" id="product-list">
         </div>
-        <div class="product-card" onclick="buyItem('智能手表', 899)">
-            <img class="product-img" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" alt="商品">
-            <div>智能手表</div>
-            <div class="price">¥899</div>
-            <button class="buy-btn">加入购物车</button>
+
+    <div class="footer">
+        <div>
+            <span style="font-size: 12px; color: #888;">合计</span>
+            <div class="total-price">¥<span id="total-amount">0</span></div>
         </div>
+        <button class="checkout-btn" onclick="checkout()">立即结算</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // 让小程序展开到全屏
+        tg.expand();
+        
+        const products = [
+            { id: 1, name: "iPhone 15 Pro", price: 7999, img: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=300" },
+            { id: 2, name: "iPad Air", price: 4799, img: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300" },
+            { id: 3, name: "MacBook M3", price: 9299, img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300" },
+            { id: 4, name: "AirPods Pro", price: 1899, img: "https://images.unsplash.com/photo-1588423770574-91993ca06f1f?w=300" }
+        ];
 
-        function buyItem(name, price) {
-            // 1. 触发手机轻微震动反馈
-            tg.HapticFeedback.impactOccurred('medium');
+        let total = 0;
+
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${p.img}">
+                    <div class="card-info">
+                        <div class="card-title">${p.name}</div>
+                        <div class="card-price">¥${p.price}</div>
+                        <button class="add-btn" onclick="addToCart(${p.price})">加入购物车</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function addToCart(price) {
+            tg.HapticFeedback.impactOccurred('light'); // 轻微震动
+            total += price;
+            document.getElementById('total-amount').innerText = total;
             
-            // 2. 弹窗确认
-            tg.showConfirm(`您确定要购买 ${name} 吗？`, (ok) => {
+            // 显示 Telegram 原生主按钮
+            tg.MainButton.text = `去支付 ¥${total}`;
+            tg.MainButton.show();
+        }
+
+        tg.onEvent('mainButtonClicked', function() {
+            checkout();
+        });
+
+        function checkout() {
+            if (total === 0) {
+                tg.showAlert("购物车还是空的哦~");
+                return;
+            }
+            tg.showConfirm(`确认支付 ¥${total} 吗？`, (ok) => {
                 if (ok) {
-                    tg.showAlert(`已下单！感谢支付 ${price} 元。`);
+                    tg.showAlert("订单已提交！我们会尽快为您发货。");
+                    total = 0;
+                    document.getElementById('total-amount').innerText = total;
+                    tg.MainButton.hide();
                 }
             });
         }
+
+        renderProducts();
     </script>
 </body>
 </html>
